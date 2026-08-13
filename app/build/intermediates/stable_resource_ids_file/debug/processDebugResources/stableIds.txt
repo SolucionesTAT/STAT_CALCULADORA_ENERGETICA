@@ -1,0 +1,6 @@
+com.tuempresa.balanceelectrico:id/webview = 0x7f010000
+com.tuempresa.balanceelectrico:string/app_name = 0x7f040000
+com.tuempresa.balanceelectrico:mipmap/ic_launcher_round = 0x7f030001
+com.tuempresa.balanceelectrico:style/AppTheme = 0x7f050000
+com.tuempresa.balanceelectrico:mipmap/ic_launcher = 0x7f030000
+com.tuempresa.balanceelectrico:layout/activity_main = 0x7f020000
