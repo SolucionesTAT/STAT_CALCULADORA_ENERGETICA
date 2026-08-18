@@ -1,0 +1,12 @@
+# Sistema operativo / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Si en el futuro se retoma el proyecto de Android Studio (TWA empaquetado),
+# no versionar caché de Gradle, salidas de build ni configuración local:
+.gradle/
+build/
+*/build/
+.idea/
+local.properties

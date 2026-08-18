@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>STAT Calculadora Energética</title>
+<meta name="theme-color" content="#0F1413">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<script>
+  try{
+    var s = JSON.parse(localStorage.getItem('stat-calc:settings') || '{}');
+    if(s.theme && s.theme !== 'auto') document.documentElement.setAttribute('data-theme', s.theme);
+  }catch(e){}
+</script>
+</head>
+<body data-base=".">
+<div class="app">
+  <div class="screen" style="padding-top:0">
+    <div class="top-card">
+      <img src="assets/brand/stat-mark-oncharcoal.jpg" alt="STAT">
+      <div style="flex:1">
+        <div class="title">STAT Calculadora Energética</div>
+        <div class="subtitle">Servicios eléctricos · Ecuador</div>
+      </div>
+      <button class="settings-btn" id="theme-toggle-btn" type="button" aria-label="Cambiar tema"></button>
+    </div>
+  </div>
+
+  <div id="summary-slot"></div>
+
+  <div class="screen" style="padding-top:0">
+    <div id="install-banner" class="install-banner">
+      <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 18v2h16v-2"/></svg>
+      <div class="text">Instala la app para usarla sin conexión y acceder más rápido.</div>
+      <button id="install-btn" type="button">Instalar</button>
+    </div>
+
+    <div class="label" style="margin-bottom:10px">Calculadoras</div>
+    <a class="calc-item" href="calculators/imbalance/index.html" style="text-decoration:none">
+      <div class="icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13H11l-1 9 8.5-11H12z"/></svg>
+      </div>
+      <div style="flex:1">
+        <div class="title">Desbalance de voltaje y corriente</div>
+        <div class="subtitle">3 fases · NEMA MG-1</div>
+      </div>
+      <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
+
+    <div style="display:flex; align-items:center; gap:10px; margin:20px 0 10px">
+      <div class="label">Próximos módulos</div>
+      <div style="flex:1; height:1px; background:var(--border)"></div>
+    </div>
+    <div class="coming-soon-grid">
+      <div class="coming-soon-card"><div class="title">Factor de potencia</div><div class="tag">PRONTO</div></div>
+      <div class="coming-soon-card"><div class="title">Caída de tensión</div><div class="tag">PRONTO</div></div>
+      <div class="coming-soon-card"><div class="title">Dimensionamiento de cables</div><div class="tag">PRONTO</div></div>
+      <div class="coming-soon-card"><div class="title">Corriente de cortocircuito</div><div class="tag">PRONTO</div></div>
+    </div>
+    <div style="font:500 11px var(--font-sans); color:var(--text-tertiary); margin-top:10px">+ Puesta a tierra · Carga de transformador · Termografía</div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a class="active" href="index.html">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 4l8 6.5V20H4z"/></svg>
+    <span>Inicio</span>
+  </a>
+  <a href="history/index.html">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+    <span>Historial</span>
+  </a>
+  <a href="about/index.html">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+    <span>Acerca de</span>
+  </a>
+</nav>
+
+<script type="module">
+  import { getHistory, getSettings, getEffectiveTheme, toggleTheme } from './js/storage.js';
+  import { getMode } from './calculators/imbalance/logic.js';
+  import { renderGauge } from './js/gauge.js';
+
+  const SUN_ICON = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>';
+  const MOON_ICON = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+
+  const themeBtn = document.getElementById('theme-toggle-btn');
+  function paintThemeIcon(){
+    themeBtn.innerHTML = getEffectiveTheme() === 'dark' ? SUN_ICON : MOON_ICON;
+  }
+  themeBtn.addEventListener('click', () => { toggleTheme(); paintThemeIcon(); });
+  paintThemeIcon();
+
+  const history = getHistory();
+  const decimals = getSettings().decimals ?? 2;
+  const slot = document.getElementById('summary-slot');
+  if(history.length){
+    const last = history[0];
+    const mode = getMode(last.mode);
+    const date = new Date(last.timestamp);
+    const dateLabel = date.toLocaleDateString('es-EC', { day: '2-digit', month: '2-digit' }) + ' ' +
+      date.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' });
+    slot.innerHTML = `
+      <a class="summary-card" href="report/index.html?id=${last.id}" style="text-decoration:none; display:block">
+        <div class="row">
+          <div class="gauge-mini" style="flex:none"></div>
+          <div class="info">
+            <div class="label">Última medición${last.board ? ' · ' + last.board : ''}</div>
+            <div class="value tabular">${last.pct.toFixed(decimals)}<span class="pct"> %</span></div>
+            <div class="meta">${dateLabel} · ${last.status.label}</div>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </a>`;
+    const gaugeEl = document.createElement('div');
+    gaugeEl.className = 'arc';
+    slot.querySelector('.gauge-mini').appendChild(gaugeEl);
+    renderGauge(gaugeEl, { pct: last.pct, gaugeMax: mode.gaugeMax, thresholds: mode.thresholds, size: 96 });
+  }
+</script>
+<script type="module" src="js/app-shell.js"></script>
+</body>
+</html>

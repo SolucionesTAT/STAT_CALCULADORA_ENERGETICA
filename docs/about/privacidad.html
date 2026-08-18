@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Política de privacidad · STAT Calculadora Energética</title>
+<meta name="theme-color" content="#0F1413">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" href="../assets/icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<script>
+  try{
+    var s = JSON.parse(localStorage.getItem('stat-calc:settings') || '{}');
+    if(s.theme && s.theme !== 'auto') document.documentElement.setAttribute('data-theme', s.theme);
+  }catch(e){}
+</script>
+</head>
+<body data-base="..">
+<div class="app no-bottom-nav">
+  <div class="subheader">
+    <a class="back-btn" href="index.html" aria-label="Volver">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="title">Política de privacidad</div>
+  </div>
+
+  <div class="screen" style="padding-top:6px; display:flex; flex-direction:column; gap:14px">
+    <div class="card" style="font:400 13px/1.7 var(--font-sans); color:var(--text-secondary)">
+      <p style="margin:0 0 10px"><strong style="color:var(--text)">Última actualización:</strong> 2026.</p>
+
+      <p style="margin:0 0 10px">STAT Calculadora Energética es una aplicación de uso local. Este documento describe exactamente qué hace la app con tus datos.</p>
+
+      <p style="margin:0 0 6px"><strong style="color:var(--text)">Ningún dato sale de tu dispositivo.</strong> La app no tiene servidor propio, no envía información a internet y no requiere conexión para funcionar. Todos los cálculos ocurren localmente en tu teléfono.</p>
+
+      <p style="margin:0 0 6px"><strong style="color:var(--text)">No hay cuentas ni inicio de sesión.</strong> No se te pide correo, contraseña ni ningún dato personal para usar la app.</p>
+
+      <p style="margin:0 0 6px"><strong style="color:var(--text)">Historial y ajustes.</strong> Las mediciones que guardas y tus preferencias (tema, decimales, nombre de técnico) se almacenan únicamente en el almacenamiento local de tu navegador/dispositivo (localStorage). Si desinstalas la app o borras los datos del sitio, esa información se pierde permanentemente — no hay copia en ningún servidor.</p>
+
+      <p style="margin:0 0 6px"><strong style="color:var(--text)">Sin analítica ni rastreo.</strong> No usamos Google Analytics ni ningún SDK de terceros que recopile tu actividad.</p>
+
+      <p style="margin:0 0 6px"><strong style="color:var(--text)">Enlaces salientes.</strong> Las pantallas de "Acerca de" incluyen enlaces al sitio web y redes sociales de STAT. Al abrirlos sales de la app hacia otro sitio o app, bajo la política de privacidad de ese destino.</p>
+
+      <p style="margin:0">Para consultas sobre esta política, contáctanos en <a href="mailto:sistemas@stat.com.ec">sistemas@stat.com.ec</a>.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

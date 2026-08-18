@@ -1,0 +1,128 @@
+/*
+  Tokens del sistema de diseño de STAT (fuente de verdad: proyecto de diseño
+  "STAT Calculadora Energetica.dc.html"). No inventar colores/tipografía fuera
+  de aquí — ver CLAUDE.md > Identidad de marca.
+
+  Modo oscuro es el default de la app (uso de campo). Modo claro existe para
+  uso a sol directo y es el único modo del Reporte (hoja imprimible).
+*/
+
+:root{
+  /* ---- Marca ---- */
+  --brand-charcoal: #262626;
+  --brand-teal: #40A39B;
+
+  /* ---- Tipografía ---- */
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* ---- Espaciado (4 · 8 · 12 · 16 · 20 · 24 · 32 · 40) ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 32px;
+  --sp-8: 40px;
+  --screen-margin: 20px;
+
+  /* ---- Radios ---- */
+  --r-chip: 6px;
+  --r-cell: 8px;
+  --r-field: 12px;
+  --r-card: 14px;
+  --r-screen: 34px;
+  --r-pill: 999px;
+
+  /* ---- Alturas táctiles mínimas ---- */
+  --tap-button: 56px;
+  --tap-field: 62px;
+  --tap-icon: 44px;
+
+  /* ---- Estados (nunca usar teal para esto) ---- */
+  --state-good: #33A357;
+  --state-warn: #F0A93E;
+  --state-crit: #F0584C;
+
+  /* ---- Modo oscuro · default ---- */
+  --bg: #0F1413;
+  --surface: #171D1C;
+  --surface-sunken: #141A19;
+  --border: #2C3634;
+  --text: #EDF2F1;
+  --text-secondary: #9AA5A3;
+  --text-tertiary: #667370;
+  --accent: #46B3A7;
+  --accent-on: #06231F;
+  --state-good-bg: rgba(51,163,87,.14);
+  --state-good-border: rgba(51,163,87,.4);
+  --state-warn-bg: rgba(240,169,62,.14);
+  --state-warn-border: rgba(240,169,62,.4);
+  --state-crit-bg: rgba(240,88,76,.14);
+  --state-crit-border: rgba(240,88,76,.4);
+  --btn-disabled-bg: #1A211F;
+  --btn-disabled-text: #4E5957;
+  --report-shadow: 0 10px 24px -12px rgba(0,0,0,.5);
+}
+
+/* ---- Modo claro · sol directo y reportes ---- */
+:root[data-theme="light"]{
+  --bg: #F1F4F3;
+  --surface: #FFFFFF;
+  --surface-sunken: #F1F4F3;
+  --border: #DDE3E1;
+  --border-strong: #C9D2CF;
+  --text: #111514;
+  --text-secondary: #55605E;
+  --text-tertiary: #7A8482;
+  --accent: #2A8C84;
+  --accent-on: #FFFFFF;
+  --state-good-bg: #E8F5ED;
+  --state-warn-bg: #FEF6E9;
+  --state-crit-bg: #FDEDEB;
+  --btn-disabled-bg: #E7EBEA;
+  --btn-disabled-text: #A3ADAB;
+}
+
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg: #F1F4F3;
+    --surface: #FFFFFF;
+    --surface-sunken: #F1F4F3;
+    --border: #DDE3E1;
+    --border-strong: #C9D2CF;
+    --text: #111514;
+    --text-secondary: #55605E;
+    --text-tertiary: #7A8482;
+    --accent: #2A8C84;
+    --accent-on: #FFFFFF;
+    --state-good-bg: #E8F5ED;
+    --state-warn-bg: #FEF6E9;
+    --state-crit-bg: #FDEDEB;
+    --btn-disabled-bg: #E7EBEA;
+    --btn-disabled-text: #A3ADAB;
+  }
+}
+
+/* El Reporte siempre es una hoja clara, sin importar el tema activo. */
+.report-sheet{
+  --bg: #F1F4F3;
+  --surface: #FFFFFF;
+  --surface-sunken: #F1F4F3;
+  --border: #DDE3E1;
+  --text: #111514;
+  --text-secondary: #55605E;
+  --text-tertiary: #7A8482;
+  --accent: #2A8C84;
+  --accent-on: #FFFFFF;
+  --state-good: #23803F;
+  --state-good-bg: #E8F5ED;
+  --state-good-border: #23803F;
+  --state-warn: #B4700A;
+  --state-warn-bg: #FEF6E9;
+  --state-warn-border: #B4700A;
+  --state-crit: #C3352A;
+  --state-crit-bg: #FDEDEB;
+  --state-crit-border: #C3352A;
+}
