@@ -1,6 +1,7 @@
-import { getHistory, getSettings } from '../js/storage.js';
+import { getHistory, getSettings, deleteHistoryEntry, clearHistory } from '../js/storage.js';
 
 const STATE_LABEL = { good: 'BUENO', warn: 'PRECAUCIÓN', crit: 'CRÍTICO' };
+const TRASH_ICON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13a2 2 0 002 2h6a2 2 0 002-2l1-13"/></svg>';
 
 let entries = getHistory();
 let filter = 'all';
@@ -10,6 +11,7 @@ const listEl = document.getElementById('list');
 const countEl = document.getElementById('count');
 const searchInput = document.getElementById('search-input');
 const filterRow = document.getElementById('filter-row');
+const clearAllBtn = document.getElementById('clear-all-btn');
 const decimals = getSettings().decimals ?? 2;
 
 function monthLabel(iso){
@@ -19,6 +21,7 @@ function monthLabel(iso){
 
 function render(){
   countEl.textContent = entries.length;
+  clearAllBtn.style.display = entries.length ? 'block' : 'none';
 
   const filtered = entries.filter(e => {
     const matchesFilter = filter === 'all' || e.status.group === filter;
@@ -46,17 +49,20 @@ function render(){
     const modeLabel = e.mode === 'voltage' ? 'Tensión' : 'Corriente';
     const title = e.board || `Desbalance de ${modeLabel.toLowerCase()}`;
     html += `
-      <a class="history-item" href="../report/index.html?id=${e.id}" style="text-decoration:none">
-        <div class="mini-arc" style="background:var(--state-${e.status.group})"></div>
-        <div class="info">
-          <div class="title">${escapeHtml(title)}</div>
-          <div class="meta">${dateLabel} · ${e.avg.toFixed(decimals)} ${e.unit} prom.</div>
-        </div>
-        <div class="result">
-          <div class="pct tabular" style="color:var(--state-${e.status.group})">${e.pct.toFixed(decimals)} %</div>
-          <div class="state">${STATE_LABEL[e.status.group]}</div>
-        </div>
-      </a>`;
+      <div class="history-item">
+        <a class="history-item-link" href="../report/index.html?id=${e.id}">
+          <div class="mini-arc" style="background:var(--state-${e.status.group})"></div>
+          <div class="info">
+            <div class="title">${escapeHtml(title)}</div>
+            <div class="meta">${dateLabel} · ${e.avg.toFixed(decimals)} ${e.unit} prom.</div>
+          </div>
+          <div class="result">
+            <div class="pct tabular" style="color:var(--state-${e.status.group})">${e.pct.toFixed(decimals)} %</div>
+            <div class="state">${STATE_LABEL[e.status.group]}</div>
+          </div>
+        </a>
+        <button type="button" class="history-item-delete" data-id="${e.id}" aria-label="Eliminar medición">${TRASH_ICON}</button>
+      </div>`;
   });
   listEl.innerHTML = html;
 }
@@ -77,6 +83,25 @@ filterRow.addEventListener('click', (event) => {
 
 searchInput.addEventListener('input', () => {
   query = searchInput.value.trim().toLowerCase();
+  render();
+});
+
+listEl.addEventListener('click', (event) => {
+  const btn = event.target.closest('.history-item-delete');
+  if(!btn) return;
+  event.preventDefault();
+  const id = btn.dataset.id;
+  if(!confirm('¿Eliminar esta medición del historial? No se puede deshacer.')) return;
+  deleteHistoryEntry(id);
+  entries = entries.filter(e => e.id !== id);
+  render();
+});
+
+clearAllBtn.addEventListener('click', () => {
+  if(entries.length === 0) return;
+  if(!confirm(`¿Borrar las ${entries.length} mediciones del historial? No se puede deshacer.`)) return;
+  clearHistory();
+  entries = [];
   render();
 });
 

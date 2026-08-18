@@ -24,7 +24,10 @@
   <div class="screen" style="padding-top:var(--sp-4)">
     <div style="display:flex; align-items:baseline; justify-content:space-between">
       <h1 style="font:600 24px var(--font-sans); color:var(--text)">Historial</h1>
-      <div style="font:500 11px var(--font-mono); color:var(--text-tertiary)"><span id="count">0</span> REGISTROS</div>
+      <div style="display:flex; align-items:baseline; gap:12px">
+        <div style="font:500 11px var(--font-mono); color:var(--text-tertiary)"><span id="count">0</span> REGISTROS</div>
+        <button type="button" class="clear-history-btn" id="clear-all-btn" style="display:none">Borrar todo</button>
+      </div>
     </div>
 
     <div class="search-bar">

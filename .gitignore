@@ -1,3 +1,6 @@
+# Documentación interna: no debe publicarse en el repo público
+CLAUDE.md
+
 # Sistema operativo / editor
 .DS_Store
 Thumbs.db
