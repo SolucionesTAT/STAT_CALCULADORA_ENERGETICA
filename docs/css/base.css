@@ -116,12 +116,26 @@ button{ font-family: inherit; }
 }
 .numfield.focused{ border-color: var(--accent); box-shadow: 0 0 0 3px rgba(70,179,167,.16); }
 .numfield.error{ border-color: var(--state-crit); }
-.numfield .tag{ font: 600 13.5px var(--font-mono); color: var(--accent); width: 44px; flex: none; }
+.numfield .tag{ font: 600 13.5px var(--font-mono); color: var(--accent); width: 52px; flex: none; }
 .numfield.error .tag{ color: var(--state-crit); }
 .numfield .value{ flex: 1; text-align: right; font: 600 28px var(--font-mono); color: var(--text); }
 .numfield .value.placeholder{ color: var(--text-tertiary); }
 .numfield .unit{ font: 500 15px var(--font-sans); color: var(--text-tertiary); width: 16px; flex: none; }
 .numfield-error-text{ font: 500 11.5px var(--font-sans); color: var(--state-crit); margin-top: var(--sp-2); }
+
+/* Variante con <input> nativo (teclado del sistema) en vez del teclado propio
+   en pantalla — para formularios con campos condicionales/variables donde el
+   patrón de "siempre 3 campos fijos" del teclado propio no aplica bien. */
+.numfield:focus-within{ border-color: var(--accent); box-shadow: 0 0 0 3px rgba(70,179,167,.16); }
+.numfield-input{
+  flex: 1; min-width: 0; text-align: right; font: 600 28px var(--font-mono); color: var(--text);
+  background: transparent; border: none; outline: none; -moz-appearance: textfield;
+}
+.numfield-input::-webkit-outer-spin-button, .numfield-input::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+.numfield-input::placeholder{ color: var(--text-tertiary); }
+.field-block{ margin-bottom: var(--sp-3); }
+.field-block .label{ margin-bottom: var(--sp-2); }
+.field-hint{ font: 400 11.5px var(--font-sans); color: var(--text-tertiary); margin-top: var(--sp-2); line-height: 1.5; }
 
 /* ---- Teclado numérico propio ---- */
 .keypad-dock{

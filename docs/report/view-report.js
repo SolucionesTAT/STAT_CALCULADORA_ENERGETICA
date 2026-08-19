@@ -8,13 +8,26 @@ const slot = document.getElementById('report-slot');
 if(!m){
   slot.innerHTML = `<div class="empty-state">No hay una medición para mostrar. Vuelve a la calculadora y genera un resultado primero.</div>`;
 }else{
-  render(m);
-}
-
-function render(m){
+  const calculator = m.calculator || 'imbalance';
   const decimals = getSettings().decimals ?? 2;
   const date = new Date(m.timestamp);
   const dateLabel = date.toLocaleDateString('es-EC') + ' ' + date.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' });
+
+  const shareText = calculator === 'grounding'
+    ? renderGrounding(m, decimals, dateLabel)
+    : renderImbalance(m, decimals, dateLabel);
+
+  document.getElementById('print-btn').addEventListener('click', () => window.print());
+  document.getElementById('share-btn').addEventListener('click', async () => {
+    if(navigator.share){
+      try{ await navigator.share({ title: 'Reporte STAT', text: shareText }); }catch(e){ /* cancelado */ }
+    }else if(navigator.clipboard){
+      await navigator.clipboard.writeText(shareText);
+    }
+  });
+}
+
+function renderImbalance(m, decimals, dateLabel){
   const modeLabel = m.mode === 'voltage' ? 'tensión' : 'corriente';
 
   const rows = m.tags.map((tag, i) => {
@@ -30,14 +43,7 @@ function render(m){
 
   slot.innerHTML = `
     <div class="report-sheet">
-      <div class="report-head">
-        <img src="../assets/brand/stat-mark-onwhite.jpg" alt="STAT">
-        <div class="company">
-          <div class="name">STAT · SERVICIOS ELÉCTRICOS</div>
-          <div class="site">stat.com.ec · Ecuador</div>
-          <img src="../assets/brand/stat-tagline.png" alt="It's for life">
-        </div>
-      </div>
+      ${reportHead()}
 
       <div class="report-title">Desbalance de ${modeLabel} trifásico</div>
 
@@ -70,24 +76,88 @@ function render(m){
         <div><div class="k">MÁX / MÍN</div><div class="v" style="font-family:var(--font-mono)">${m.max.toFixed(1)} / ${m.min.toFixed(1)}</div></div>
       </div>
 
-      ${m.notes ? `
-      <div class="report-notes">
-        <div class="k" style="font:600 9px var(--font-sans); letter-spacing:.09em; color:var(--text-tertiary)">OBSERVACIONES</div>
-        <div class="body">${escapeHtml(m.notes)}</div>
-      </div>` : ''}
+      ${notesBlock(m)}
 
       <div class="report-footer">Generado con STAT Calculadora Energética. Desviación máxima respecto al promedio de las tres ${m.mode === 'voltage' ? 'tensiones' : 'corrientes'} de línea (metodología NEMA MG-1).</div>
     </div>`;
 
-  document.getElementById('print-btn').addEventListener('click', () => window.print());
-  document.getElementById('share-btn').addEventListener('click', async () => {
-    const text = `Reporte STAT — Desbalance de ${modeLabel}\n${m.board ? m.board + '\n' : ''}Desbalance: ${m.pct.toFixed(decimals)}% (${m.status.label})\nPromedio: ${m.avg.toFixed(decimals)} ${m.unit}\n${dateLabel}`;
-    if(navigator.share){
-      try{ await navigator.share({ title: 'Reporte STAT', text }); }catch(e){ /* cancelado */ }
-    }else if(navigator.clipboard){
-      await navigator.clipboard.writeText(text);
-    }
-  });
+  return `Reporte STAT — Desbalance de ${modeLabel}\n${m.board ? m.board + '\n' : ''}Desbalance: ${m.pct.toFixed(decimals)}% (${m.status.label})\nPromedio: ${m.avg.toFixed(decimals)} ${m.unit}\n${dateLabel}`;
+}
+
+function renderGrounding(m, decimals, dateLabel){
+  const extraRows = !m.soilKnown ? `
+      <div><div class="k">ESPACIAMIENTO (a)</div><div class="v" style="font-family:var(--font-mono)">${m.wennerA.toFixed(decimals)} m</div></div>
+      <div><div class="k">LECTURA TELURÓMETRO (R)</div><div class="v" style="font-family:var(--font-mono)">${m.wennerR.toFixed(decimals)} Ω</div></div>` : '';
+  const iecRow = m.useIEC ? `
+      <div><div class="k">SENSIBILIDAD (IΔn)</div><div class="v" style="font-family:var(--font-mono)">${m.iDeltaMa} mA</div></div>` : '';
+  const necRefRow = m.useIEC && m.necReference ? `
+      <div><div class="k">REF. NEC 250.53</div><div class="v" style="font-family:var(--font-mono)">≤ ${m.necReference.limitOhms} Ω (${m.necReference.label})</div></div>` : '';
+
+  slot.innerHTML = `
+    <div class="report-sheet">
+      ${reportHead()}
+
+      <div class="report-title">Puesta a tierra — electrodo vertical</div>
+
+      <div class="report-grid">
+        <div><div class="k">TABLERO / EQUIPO</div><div class="v">${m.board || '—'}</div></div>
+        <div><div class="k">FECHA Y HORA</div><div class="v" style="font-family:var(--font-mono)">${dateLabel}</div></div>
+        <div><div class="k">TÉCNICO</div><div class="v">${m.technician || '—'}</div></div>
+        <div><div class="k">CRITERIO</div><div class="v">${m.evaluation.criterion}</div></div>
+      </div>
+
+      <div class="report-grid" style="margin-top:11px">
+        <div><div class="k">RESISTIVIDAD (ρ)</div><div class="v" style="font-family:var(--font-mono)">${m.resistivity.toFixed(decimals)} Ω·m</div></div>
+        <div><div class="k">LONGITUD (L)</div><div class="v" style="font-family:var(--font-mono)">${m.length.toFixed(decimals)} m</div></div>
+        <div><div class="k">DIÁMETRO (d)</div><div class="v">${m.diameterLabel}</div></div>
+        ${extraRows}
+        ${iecRow}
+        ${necRefRow}
+      </div>
+
+      <div class="report-result" style="background:var(--state-${m.status.group}-bg); border:1px solid var(--state-${m.status.group}-border)">
+        <div>
+          <div class="k" style="font:600 9px var(--font-sans); letter-spacing:.09em; color:var(--state-${m.status.group})">RESISTENCIA</div>
+          <div class="pct">${m.resistance.toFixed(decimals)} Ω</div>
+        </div>
+        <div class="side">
+          <span class="badge badge-pill" style="background:var(--state-${m.status.group}); color:#fff"><span>${m.status.label}</span></span>
+        </div>
+      </div>
+
+      ${!m.evaluation.pass ? `
+      <div class="report-notes">
+        <div class="k" style="font:600 9px var(--font-sans); letter-spacing:.09em; color:var(--state-crit)">RECOMENDACIÓN</div>
+        <div class="body">Instalar un electrodo adicional (NEC 250.53(A)(2)), separación mínima 1.8 m (6 pies) entre electrodos.</div>
+      </div>` : ''}
+
+      ${notesBlock(m)}
+
+      <div class="report-footer">Generado con STAT Calculadora Energética. Resistencia de electrodo vertical calculada con la fórmula de Dwight.</div>
+    </div>`;
+
+  return `Reporte STAT — Puesta a tierra\n${m.board ? m.board + '\n' : ''}Resistencia: ${m.resistance.toFixed(decimals)} Ω (${m.status.label})\nCriterio: ${m.evaluation.criterion}\n${dateLabel}`;
+}
+
+function reportHead(){
+  return `
+      <div class="report-head">
+        <img src="../assets/brand/stat-mark-onwhite.jpg" alt="STAT">
+        <div class="company">
+          <div class="name">STAT · SERVICIOS ELÉCTRICOS</div>
+          <div class="site">stat.com.ec · Ecuador</div>
+          <img src="../assets/brand/stat-tagline.png" alt="It's for life">
+        </div>
+      </div>`;
+}
+
+function notesBlock(m){
+  if(!m.notes) return '';
+  return `
+      <div class="report-notes">
+        <div class="k" style="font:600 9px var(--font-sans); letter-spacing:.09em; color:var(--text-tertiary)">OBSERVACIONES</div>
+        <div class="body">${escapeHtml(m.notes)}</div>
+      </div>`;
 }
 
 function escapeHtml(str){

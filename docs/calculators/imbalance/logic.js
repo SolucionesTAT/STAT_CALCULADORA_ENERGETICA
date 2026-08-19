@@ -11,7 +11,7 @@ export const MODES = {
     unit: 'V',
     label: 'Tensión',
     icon: 'voltage',
-    tags: ['V AB', 'V BC', 'V CA'],
+    tags: ['V A/B', 'V B/C', 'V C/A'],
     fieldTitle: 'Tensión entre líneas',
     reference: 'NEMA MG-1 · IEC 60034-1',
     // Umbrales de estado — Modo Tensión (V). El corte de 1% coincide con el

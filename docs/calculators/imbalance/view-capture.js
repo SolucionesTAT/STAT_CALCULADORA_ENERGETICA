@@ -85,6 +85,7 @@ calcBtn.addEventListener('click', () => {
   const result = calculate(values, mode);
   const cfg = getMode(mode);
   setCurrentMeasurement({
+    calculator: 'imbalance',
     mode,
     tags: cfg.tags,
     unit: cfg.unit,

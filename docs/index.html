@@ -53,6 +53,16 @@
       </div>
       <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
     </a>
+    <a class="calc-item" href="calculators/grounding/index.html" style="text-decoration:none">
+      <div class="icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v10"/><path d="M6 15h12"/><path d="M8 18h8"/><path d="M10 21h4"/></svg>
+      </div>
+      <div style="flex:1">
+        <div class="title">Puesta a tierra</div>
+        <div class="subtitle">Electrodo vertical · NEC 250.53</div>
+      </div>
+      <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
 
     <div style="display:flex; align-items:center; gap:10px; margin:20px 0 10px">
       <div class="label">Próximos módulos</div>
@@ -64,7 +74,7 @@
       <div class="coming-soon-card"><div class="title">Dimensionamiento de cables</div><div class="tag">PRONTO</div></div>
       <div class="coming-soon-card"><div class="title">Corriente de cortocircuito</div><div class="tag">PRONTO</div></div>
     </div>
-    <div style="font:500 11px var(--font-sans); color:var(--text-tertiary); margin-top:10px">+ Puesta a tierra · Carga de transformador · Termografía</div>
+    <div style="font:500 11px var(--font-sans); color:var(--text-tertiary); margin-top:10px">+ Carga de transformador · Termografía</div>
   </div>
 </div>
 
@@ -103,26 +113,42 @@
   const slot = document.getElementById('summary-slot');
   if(history.length){
     const last = history[0];
-    const mode = getMode(last.mode);
+    const calculator = last.calculator || 'imbalance'; // registros guardados antes de este campo son de Desbalance
     const date = new Date(last.timestamp);
     const dateLabel = date.toLocaleDateString('es-EC', { day: '2-digit', month: '2-digit' }) + ' ' +
       date.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' });
-    slot.innerHTML = `
-      <a class="summary-card" href="report/index.html?id=${last.id}" style="text-decoration:none; display:block">
-        <div class="row">
-          <div class="gauge-mini" style="flex:none"></div>
-          <div class="info">
-            <div class="label">Última medición${last.board ? ' · ' + last.board : ''}</div>
-            <div class="value tabular">${last.pct.toFixed(decimals)}<span class="pct"> %</span></div>
-            <div class="meta">${dateLabel} · ${last.status.label}</div>
+
+    if(calculator === 'grounding'){
+      slot.innerHTML = `
+        <a class="summary-card" href="report/index.html?id=${last.id}" style="text-decoration:none; display:block">
+          <div class="row">
+            <div class="info" style="flex:1">
+              <div class="label">Última medición${last.board ? ' · ' + last.board : ''} · Puesta a tierra</div>
+              <div class="value tabular" style="color:var(--state-${last.status.group})">${last.resistance.toFixed(decimals)}<span class="pct"> Ω</span></div>
+              <div class="meta">${dateLabel} · ${last.status.label}</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
           </div>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
-        </div>
-      </a>`;
-    const gaugeEl = document.createElement('div');
-    gaugeEl.className = 'arc';
-    slot.querySelector('.gauge-mini').appendChild(gaugeEl);
-    renderGauge(gaugeEl, { pct: last.pct, gaugeMax: mode.gaugeMax, thresholds: mode.thresholds, size: 96 });
+        </a>`;
+    }else{
+      const mode = getMode(last.mode);
+      slot.innerHTML = `
+        <a class="summary-card" href="report/index.html?id=${last.id}" style="text-decoration:none; display:block">
+          <div class="row">
+            <div class="gauge-mini" style="flex:none"></div>
+            <div class="info">
+              <div class="label">Última medición${last.board ? ' · ' + last.board : ''}</div>
+              <div class="value tabular">${last.pct.toFixed(decimals)}<span class="pct"> %</span></div>
+              <div class="meta">${dateLabel} · ${last.status.label}</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </a>`;
+      const gaugeEl = document.createElement('div');
+      gaugeEl.className = 'arc';
+      slot.querySelector('.gauge-mini').appendChild(gaugeEl);
+      renderGauge(gaugeEl, { pct: last.pct, gaugeMax: mode.gaugeMax, thresholds: mode.thresholds, size: 96 });
+    }
   }
 </script>
 <script type="module" src="js/app-shell.js"></script>

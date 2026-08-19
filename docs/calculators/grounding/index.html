@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Puesta a tierra · STAT Calculadora Energética</title>
+<meta name="theme-color" content="#0F1413">
+<link rel="manifest" href="../../manifest.json">
+<link rel="icon" href="../../assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STAT Calc">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<script>
+  try{
+    var s = JSON.parse(localStorage.getItem('stat-calc:settings') || '{}');
+    if(s.theme && s.theme !== 'auto') document.documentElement.setAttribute('data-theme', s.theme);
+  }catch(e){}
+</script>
+</head>
+<body data-base="../..">
+<div class="app no-bottom-nav">
+  <div class="subheader">
+    <a class="back-btn" href="../../index.html" aria-label="Volver">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="title">Puesta a tierra</div>
+  </div>
+
+  <div class="screen" style="padding-top:6px">
+    <div class="label" style="margin-bottom:10px">¿Conoces la resistividad del suelo?</div>
+    <div class="segctl" id="soil-switch" style="margin-bottom:16px">
+      <button type="button" class="active" data-known="yes">Sí</button>
+      <button type="button" data-known="no">No, calcular con Wenner</button>
+    </div>
+
+    <div id="resistivity-block">
+      <div class="field-block">
+        <div class="label">Resistividad del suelo (ρ)</div>
+        <div class="numfield">
+          <input type="number" inputmode="decimal" step="any" class="numfield-input" id="resistivity-input" placeholder="0.0">
+          <span class="unit">Ω·m</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="wenner-block" style="display:none">
+      <div class="field-block">
+        <div class="label">Espaciamiento entre electrodos (a)</div>
+        <div class="numfield">
+          <input type="number" inputmode="decimal" step="any" class="numfield-input" id="wenner-a-input" placeholder="0.0">
+          <span class="unit">m</span>
+        </div>
+      </div>
+      <div class="field-block">
+        <div class="label">Lectura del telurómetro (R)</div>
+        <div class="numfield">
+          <input type="number" inputmode="decimal" step="any" class="numfield-input" id="wenner-r-input" placeholder="0.0">
+          <span class="unit">Ω</span>
+        </div>
+        <div class="field-hint">Método de Wenner, 4 electrodos: ρ = 2π · a · R. Se calcula automáticamente.</div>
+      </div>
+    </div>
+
+    <div class="field-block">
+      <div class="label">Longitud enterrada de la varilla (L)</div>
+      <div class="numfield">
+        <input type="number" inputmode="decimal" step="any" class="numfield-input" id="length-input" placeholder="0.0">
+        <span class="unit">m</span>
+      </div>
+    </div>
+
+    <div class="label" style="margin-bottom:10px">Diámetro de la varilla</div>
+    <div class="segctl" id="diameter-switch" style="margin-bottom:12px">
+      <button type="button" class="active" data-diameter="5/8">5/8″</button>
+      <button type="button" data-diameter="3/4">3/4″</button>
+      <button type="button" data-diameter="other">Otro</button>
+    </div>
+    <div id="diameter-other-block" class="field-block" style="display:none">
+      <div class="numfield">
+        <input type="number" inputmode="decimal" step="any" class="numfield-input" id="diameter-input" placeholder="0.0">
+        <span class="unit">m</span>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-secondary" id="iec-toggle-btn" style="justify-content:space-between; padding:0 var(--sp-4); margin-top:8px">
+      <span>Usar criterio IEC (avanzado)</span>
+      <svg id="iec-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <div id="iec-panel" class="card" style="display:none; margin-top:10px">
+      <div class="label" style="margin-bottom:10px">Sensibilidad del diferencial (IΔn)</div>
+      <div class="segctl" id="idelta-switch">
+        <button type="button" data-ma="30">30 mA</button>
+        <button type="button" data-ma="100">100 mA</button>
+        <button type="button" data-ma="300">300 mA</button>
+        <button type="button" data-ma="500">500 mA</button>
+      </div>
+      <div class="field-hint">R máxima aceptable = 50V / IΔn. Reemplaza al límite de 25 Ω de NEC 250.53 como criterio de evaluación; NEC se sigue mostrando como referencia.</div>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="calc-btn" style="margin-top:20px" disabled>Calcular</button>
+  </div>
+</div>
+
+<script type="module" src="view-capture.js"></script>
+</body>
+</html>

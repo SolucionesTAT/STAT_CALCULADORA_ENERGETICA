@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Resultado · STAT Calculadora Energética</title>
+<meta name="theme-color" content="#0F1413">
+<link rel="manifest" href="../../manifest.json">
+<link rel="icon" href="../../assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="../../assets/icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STAT Calc">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<script>
+  try{
+    var s = JSON.parse(localStorage.getItem('stat-calc:settings') || '{}');
+    if(s.theme && s.theme !== 'auto') document.documentElement.setAttribute('data-theme', s.theme);
+  }catch(e){}
+</script>
+</head>
+<body data-base="../..">
+<div class="app no-bottom-nav with-action-bar">
+  <div class="subheader">
+    <a class="back-btn" href="index.html" aria-label="Volver">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="title">Puesta a tierra</div>
+    <div class="meta" id="page-meta">—</div>
+  </div>
+
+  <div class="screen" style="padding-top:6px">
+    <div class="card" style="text-align:center; padding:24px 20px">
+      <div class="label">Resistencia del electrodo</div>
+      <div class="tabular" id="resistance-readout" style="font:600 52px/1 var(--font-mono); margin-top:10px">0.00<span style="font-size:22px; color:var(--text-secondary)"> Ω</span></div>
+      <div id="status-badge" style="margin-top:14px"></div>
+      <div id="criterion-text" style="font:500 11.5px var(--font-mono); color:var(--text-tertiary); margin-top:12px"></div>
+      <div id="nec-reference-text" style="font:400 11px var(--font-sans); color:var(--text-tertiary); margin-top:6px"></div>
+      <div id="recommendation" style="display:none; margin-top:14px; text-align:left; background:var(--state-crit-bg); border:1px solid var(--state-crit-border); border-radius:var(--r-cell); padding:12px 14px; font:400 12.5px/1.5 var(--font-sans); color:var(--text)"></div>
+    </div>
+
+    <div class="label" style="margin:16px 0 10px">Datos usados en el cálculo</div>
+    <div class="card">
+      <div class="report-grid" id="inputs-grid"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px; display:flex; flex-direction:column; gap:10px">
+      <div class="label">Datos de la medición (opcional)</div>
+      <input id="board-input" type="text" placeholder="Tablero / equipo, ej. Malla TD-3"
+        style="height:44px; background:var(--surface-sunken); border:1px solid var(--border); border-radius:var(--r-field); padding:0 var(--sp-3); color:var(--text); font:400 13.5px var(--font-sans);">
+      <textarea id="notes-input" rows="2" placeholder="Observaciones"
+        style="background:var(--surface-sunken); border:1px solid var(--border); border-radius:var(--r-field); padding:var(--sp-3); color:var(--text); font:400 13.5px var(--font-sans); resize:vertical;"></textarea>
+    </div>
+
+    <button type="button" class="btn btn-secondary" id="save-btn" style="margin-top:14px; gap:8px">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+      Guardar en historial
+    </button>
+  </div>
+</div>
+
+<div class="keypad-dock" style="padding-top:14px">
+  <div class="btn-row">
+    <button type="button" class="btn btn-primary" id="report-btn">Generar reporte</button>
+    <button type="button" class="btn-icon" id="copy-btn" aria-label="Copiar resultado">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+    </button>
+  </div>
+</div>
+
+<script type="module" src="view-result.js"></script>
+</body>
+</html>

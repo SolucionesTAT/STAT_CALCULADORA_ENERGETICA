@@ -43,28 +43,44 @@ function render(){
       html += `<div class="history-month">${month}</div>`;
       currentMonth = month;
     }
-    const date = new Date(e.timestamp);
-    const dateLabel = date.toLocaleDateString('es-EC', { day: '2-digit', month: '2-digit' }) + ' ' +
-      date.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' });
-    const modeLabel = e.mode === 'voltage' ? 'Tensión' : 'Corriente';
-    const title = e.board || `Desbalance de ${modeLabel.toLowerCase()}`;
-    html += `
-      <div class="history-item">
-        <a class="history-item-link" href="../report/index.html?id=${e.id}">
-          <div class="mini-arc" style="background:var(--state-${e.status.group})"></div>
-          <div class="info">
-            <div class="title">${escapeHtml(title)}</div>
-            <div class="meta">${dateLabel} · ${e.avg.toFixed(decimals)} ${e.unit} prom.</div>
-          </div>
-          <div class="result">
-            <div class="pct tabular" style="color:var(--state-${e.status.group})">${e.pct.toFixed(decimals)} %</div>
-            <div class="state">${STATE_LABEL[e.status.group]}</div>
-          </div>
-        </a>
-        <button type="button" class="history-item-delete" data-id="${e.id}" aria-label="Eliminar medición">${TRASH_ICON}</button>
-      </div>`;
+    html += renderRow(e);
   });
   listEl.innerHTML = html;
+}
+
+function renderRow(e){
+  const date = new Date(e.timestamp);
+  const dateLabel = date.toLocaleDateString('es-EC', { day: '2-digit', month: '2-digit' }) + ' ' +
+    date.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' });
+  const calculator = e.calculator || 'imbalance';
+
+  let title, meta, resultValue;
+  if(calculator === 'grounding'){
+    title = e.board || 'Puesta a tierra';
+    meta = `${dateLabel} · L=${e.length.toFixed(1)}m · ${e.evaluation.criterion}`;
+    resultValue = `${e.resistance.toFixed(decimals)} Ω`;
+  }else{
+    const modeLabel = e.mode === 'voltage' ? 'Tensión' : 'Corriente';
+    title = e.board || `Desbalance de ${modeLabel.toLowerCase()}`;
+    meta = `${dateLabel} · ${e.avg.toFixed(decimals)} ${e.unit} prom.`;
+    resultValue = `${e.pct.toFixed(decimals)} %`;
+  }
+
+  return `
+    <div class="history-item">
+      <a class="history-item-link" href="../report/index.html?id=${e.id}">
+        <div class="mini-arc" style="background:var(--state-${e.status.group})"></div>
+        <div class="info">
+          <div class="title">${escapeHtml(title)}</div>
+          <div class="meta">${meta}</div>
+        </div>
+        <div class="result">
+          <div class="pct tabular" style="color:var(--state-${e.status.group})">${resultValue}</div>
+          <div class="state">${STATE_LABEL[e.status.group]}</div>
+        </div>
+      </a>
+      <button type="button" class="history-item-delete" data-id="${e.id}" aria-label="Eliminar medición">${TRASH_ICON}</button>
+    </div>`;
 }
 
 function escapeHtml(str){
