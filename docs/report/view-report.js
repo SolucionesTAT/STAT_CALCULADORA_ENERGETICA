@@ -4,6 +4,17 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const m = id ? getHistoryEntry(id) : getCurrentMeasurement();
 
+// Cerrar debe volver a donde el usuario vino (Historial o Resultado), no
+// siempre a Inicio — si no hay una pantalla previa en este mismo flujo
+// (p. ej. se abrió el reporte directo), Inicio queda como respaldo.
+document.getElementById('close-btn').addEventListener('click', () => {
+  if(window.history.length > 1){
+    window.history.back();
+  }else{
+    window.location.href = '../index.html';
+  }
+});
+
 const slot = document.getElementById('report-slot');
 if(!m){
   slot.innerHTML = `<div class="empty-state">No hay una medición para mostrar. Vuelve a la calculadora y genera un resultado primero.</div>`;
