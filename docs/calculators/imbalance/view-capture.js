@@ -1,7 +1,12 @@
 import { getMode, calculate } from './logic.js';
 import { setCurrentMeasurement, getCurrentMeasurement } from '../../js/storage.js';
 
-const previous = getCurrentMeasurement();
+// La "medición actual" es una casilla compartida entre calculadoras (para
+// pasar datos entre captura/resultado/reporte). Antes de usarla para
+// precargar campos, hay que confirmar que de verdad es de este módulo —
+// si viene de otra calculadora (p. ej. Puesta a Tierra), no tiene .mode/.values.
+const previousRaw = getCurrentMeasurement();
+const previous = previousRaw && previousRaw.calculator === 'imbalance' ? previousRaw : null;
 let mode = previous ? previous.mode : 'voltage';
 let activeIndex = 0;
 const buffers = previous ? previous.values.map(v => String(v)) : ['', '', ''];

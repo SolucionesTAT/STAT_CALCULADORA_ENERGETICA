@@ -3,7 +3,7 @@ import { renderGauge } from '../../js/gauge.js';
 import { getCurrentMeasurement, setCurrentMeasurement, addHistoryEntry, getSettings } from '../../js/storage.js';
 
 const m = getCurrentMeasurement();
-if(!m){
+if(!m || m.calculator !== 'imbalance'){
   window.location.href = 'index.html';
 }
 
