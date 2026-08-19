@@ -56,20 +56,42 @@ ideltaSwitch.addEventListener('click', (event) => {
   validate();
 });
 
+// Campos numéricos como <input type="text" inputmode="decimal"> (no
+// type="number") a propósito: el teclado decimal del sistema muestra "," o
+// "." según el idioma/región del teléfono, pero type="number" SIEMPRE exige
+// "." internamente sin importar qué tecla ofrezca el teclado — en teléfonos
+// configurados en español, el teclado solo ofrece "," y el valor nunca se
+// podría escribir. Con type="text" aceptamos lo que sea y normalizamos acá.
+function normalizeDecimalInput(el){
+  el.addEventListener('input', () => {
+    let v = el.value.replace(',', '.').replace(/[^\d.]/g, '');
+    const firstDot = v.indexOf('.');
+    if(firstDot !== -1){
+      v = v.slice(0, firstDot + 1) + v.slice(firstDot + 1).replace(/\./g, '');
+    }
+    if(v !== el.value) el.value = v;
+    validate();
+  });
+}
+
+function parseDecimal(str){
+  return parseFloat(String(str).replace(',', '.'));
+}
+
 [resistivityInput, wennerAInput, wennerRInput, lengthInput, diameterInput].forEach(el => {
-  el.addEventListener('input', validate);
+  normalizeDecimalInput(el);
 });
 
 function getDiameterMeters(){
-  if(diameterId === 'other') return parseFloat(diameterInput.value) || 0;
+  if(diameterId === 'other') return parseDecimal(diameterInput.value) || 0;
   return ROD_DIAMETERS.find(d => d.id === diameterId).meters;
 }
 
 function validate(){
   const soilOk = soilKnown
-    ? parseFloat(resistivityInput.value) > 0
-    : parseFloat(wennerAInput.value) > 0 && parseFloat(wennerRInput.value) > 0;
-  const lengthOk = parseFloat(lengthInput.value) > 0;
+    ? parseDecimal(resistivityInput.value) > 0
+    : parseDecimal(wennerAInput.value) > 0 && parseDecimal(wennerRInput.value) > 0;
+  const lengthOk = parseDecimal(lengthInput.value) > 0;
   const diameterOk = getDiameterMeters() > 0;
   const iecOk = !useIEC || iDeltaMa !== null;
   calcBtn.disabled = !(soilOk && lengthOk && diameterOk && iecOk);
@@ -83,10 +105,10 @@ calcBtn.addEventListener('click', () => {
 
   const input = {
     soilKnown,
-    resistivity: soilKnown ? parseFloat(resistivityInput.value) : null,
-    wennerA: soilKnown ? null : parseFloat(wennerAInput.value),
-    wennerR: soilKnown ? null : parseFloat(wennerRInput.value),
-    length: parseFloat(lengthInput.value),
+    resistivity: soilKnown ? parseDecimal(resistivityInput.value) : null,
+    wennerA: soilKnown ? null : parseDecimal(wennerAInput.value),
+    wennerR: soilKnown ? null : parseDecimal(wennerRInput.value),
+    length: parseDecimal(lengthInput.value),
     diameterM: diameterMeters,
     useIEC,
     iDeltaAmps: useIEC ? IEC_SENSITIVITIES.find(s => s.id === iDeltaMa).amps : null
