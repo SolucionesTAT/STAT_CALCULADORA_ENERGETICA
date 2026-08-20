@@ -2,7 +2,7 @@
 // Cachea todos los assets propios para funcionamiento 100% offline.
 // Sube este número cada vez que cambien los archivos listados abajo, para
 // forzar la actualización del cache en los dispositivos ya instalados.
-const CACHE_VERSION = 'stat-calc-v6';
+const CACHE_VERSION = 'stat-calc-v10';
 
 const PRECACHE_URLS = [
   './',
@@ -18,6 +18,11 @@ const PRECACHE_URLS = [
   'calculators/imbalance/logic.js',
   'calculators/imbalance/view-capture.js',
   'calculators/imbalance/view-result.js',
+  'calculators/single-phase-imbalance/index.html',
+  'calculators/single-phase-imbalance/result.html',
+  'calculators/single-phase-imbalance/logic.js',
+  'calculators/single-phase-imbalance/view-capture.js',
+  'calculators/single-phase-imbalance/view-result.js',
   'calculators/grounding/index.html',
   'calculators/grounding/result.html',
   'calculators/grounding/logic.js',

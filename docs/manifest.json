@@ -2,7 +2,7 @@
   "id": "/",
   "name": "STAT Calculadora Energética",
   "short_name": "STAT Calc",
-  "description": "Herramientas de cálculo eléctrico de campo de STAT: desbalance de voltaje y corriente en sistemas trifásicos, según metodología NEMA MG-1.",
+  "description": "Herramientas de cálculo eléctrico de campo de STAT: desbalance de voltaje y corriente (trifásico y monofásico trifilar), puesta a tierra y más.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

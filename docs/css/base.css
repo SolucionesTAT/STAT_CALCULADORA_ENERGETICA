@@ -137,6 +137,14 @@ button{ font-family: inherit; }
 .field-block .label{ margin-bottom: var(--sp-2); }
 .field-hint{ font: 400 11.5px var(--font-sans); color: var(--text-tertiary); margin-top: var(--sp-2); line-height: 1.5; }
 
+/* Etiqueta visible dentro de un .numfield para marcar un campo opcional
+   (ver Desbalance Monofásico: L1-L2 es opcional y no bloquea el cálculo). */
+.numfield .opt-pill{
+  font: 600 8.5px var(--font-sans); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-tertiary); background: var(--surface-sunken); border: 1px solid var(--border);
+  border-radius: var(--r-pill); padding: 3px 8px; flex: none;
+}
+
 /* ---- Teclado numérico propio ---- */
 .keypad-dock{
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;

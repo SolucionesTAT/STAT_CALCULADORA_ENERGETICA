@@ -59,6 +59,11 @@ function renderRow(e){
     title = e.board || 'Puesta a tierra';
     meta = `${dateLabel} · L=${e.length.toFixed(1)}m · ${e.evaluation.criterion}`;
     resultValue = `${e.resistance.toFixed(decimals)} Ω`;
+  }else if(calculator === 'single-phase-imbalance'){
+    const modeLabel = e.mode === 'voltage' ? 'Tensión' : 'Corriente';
+    title = e.board || `Desbalance monofásico de ${modeLabel.toLowerCase()}`;
+    meta = `${dateLabel} · ${e.avg.toFixed(decimals)} ${e.unit} prom.`;
+    resultValue = `${e.pct.toFixed(decimals)} %`;
   }else{
     const modeLabel = e.mode === 'voltage' ? 'Tensión' : 'Corriente';
     title = e.board || `Desbalance de ${modeLabel.toLowerCase()}`;
