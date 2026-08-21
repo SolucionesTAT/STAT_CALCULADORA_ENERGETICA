@@ -35,11 +35,22 @@
       <input id="search-input" type="text" placeholder="Buscar por tablero o nota">
     </div>
 
+    <div class="label" style="margin:14px 0 8px">Estado</div>
     <div class="filter-row" id="filter-row">
       <button type="button" class="filter-chip active" data-filter="all">Todos</button>
       <button type="button" class="filter-chip" data-filter="good">Bueno</button>
       <button type="button" class="filter-chip" data-filter="warn">Precaución</button>
       <button type="button" class="filter-chip" data-filter="crit">Crítico</button>
+    </div>
+
+    <div class="label" style="margin:14px 0 8px">Calculadora</div>
+    <div class="filter-row" id="calc-filter-row">
+      <button type="button" class="filter-chip active" data-calc="all">Todas</button>
+      <button type="button" class="filter-chip" data-calc="imbalance">Trifásico</button>
+      <button type="button" class="filter-chip" data-calc="single-phase-imbalance">Monofásico</button>
+      <button type="button" class="filter-chip" data-calc="grounding">Tierra</button>
+      <button type="button" class="filter-chip" data-calc="cable-sizing">Cables</button>
+      <button type="button" class="filter-chip" data-calc="spd">SPD</button>
     </div>
 
     <div id="list"></div>

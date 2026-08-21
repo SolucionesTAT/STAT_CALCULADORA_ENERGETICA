@@ -251,14 +251,6 @@ button{ font-family: inherit; }
 .calc-item .subtitle{ font: 500 11.5px var(--font-sans); color: var(--text-tertiary); margin-top: 4px; }
 .calc-item .chev{ color: var(--accent); flex: none; }
 
-.coming-soon-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
-.coming-soon-card{
-  background: var(--surface-sunken); border: 1px dashed var(--border); border-radius: var(--r-card);
-  padding: var(--sp-3) var(--sp-4); min-height: 66px;
-}
-.coming-soon-card .title{ font: 600 13px/1.25 var(--font-sans); color: var(--text-tertiary); }
-.coming-soon-card .tag{ font: 500 10px var(--font-mono); color: var(--text-tertiary); opacity: .7; margin-top: var(--sp-2); }
-
 /* ---- Navegación inferior ---- */
 .bottom-nav{
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;

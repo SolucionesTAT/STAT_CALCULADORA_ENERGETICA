@@ -26,7 +26,7 @@
       <img src="../assets/brand/stat-mark-oncharcoal.jpg" alt="STAT" style="width:52px; height:52px; border-radius:10px; object-fit:cover">
       <div style="flex:1">
         <div style="font:600 15.5px/1.2 var(--font-sans); color:var(--text)">STAT Calculadora Energética</div>
-        <div style="font:500 11px var(--font-mono); color:var(--text-tertiary); margin-top:4px">v1.3.0 · PWA</div>
+        <div style="font:500 11px var(--font-mono); color:var(--text-tertiary); margin-top:4px">v1.3.1 · PWA</div>
       </div>
     </div>
 
@@ -55,18 +55,30 @@
           <button type="button" data-decimals="3">3</button>
         </div>
       </div>
-      <div class="settings-row">
-        <div><span class="name">Umbrales · Tensión</span><div class="hint">Excelente / aceptable / precaución · IEC 60034-1</div></div>
-        <span class="value">1 / 2 / 3 %</span>
-      </div>
-      <div class="settings-row">
-        <div><span class="name">Umbrales · Corriente</span><div class="hint">Aceptable / precaución</div></div>
-        <span class="value">10 / 20 %</span>
-      </div>
       <div class="settings-row" style="flex-direction:column; align-items:stretch; gap:8px">
         <span class="name">Técnico</span>
         <input id="technician-input" type="text" placeholder="Nombre del técnico (aparece en el reporte)"
           style="height:40px; background:var(--surface-sunken); border:1px solid var(--border); border-radius:var(--r-field); padding:0 var(--sp-3); color:var(--text); font:400 13.5px var(--font-sans);">
+      </div>
+    </div>
+
+    <div class="label" style="margin:16px 0 8px">Novedades</div>
+    <div class="card" style="display:flex; flex-direction:column; gap:12px">
+      <div>
+        <div style="font:600 12.5px var(--font-sans); color:var(--text)">v1.3.1</div>
+        <div style="font:400 11.5px/1.5 var(--font-sans); color:var(--text-secondary); margin-top:2px">Historial: filtro por calculadora. Se retira el resumen fijo de umbrales en Ajustes (cada módulo ya muestra su propia referencia). Nuevo ícono para Supresores de Transitorios.</div>
+      </div>
+      <div style="border-top:1px solid var(--surface-sunken); padding-top:12px">
+        <div style="font:600 12.5px var(--font-sans); color:var(--text)">v1.3.0</div>
+        <div style="font:400 11.5px/1.5 var(--font-sans); color:var(--text-secondary); margin-top:2px">Nuevo módulo: Supresores de Transitorios (SPD) — recomendación de Tipo según ubicación de la instalación.</div>
+      </div>
+      <div style="border-top:1px solid var(--surface-sunken); padding-top:12px">
+        <div style="font:600 12.5px var(--font-sans); color:var(--text)">v1.2.0</div>
+        <div style="font:400 11.5px/1.5 var(--font-sans); color:var(--text-secondary); margin-top:2px">Nuevos módulos: Desbalance Monofásico trifilar y Dimensionamiento de Cables. Mejoras de edición de mediciones guardadas en todos los módulos.</div>
+      </div>
+      <div style="border-top:1px solid var(--surface-sunken); padding-top:12px">
+        <div style="font:600 12.5px var(--font-sans); color:var(--text)">v1.0.0</div>
+        <div style="font:400 11.5px/1.5 var(--font-sans); color:var(--text-secondary); margin-top:2px">Lanzamiento inicial: Desbalance Trifásico y Puesta a Tierra.</div>
       </div>
     </div>
 

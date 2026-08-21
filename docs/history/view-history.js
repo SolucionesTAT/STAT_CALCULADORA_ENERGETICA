@@ -5,12 +5,14 @@ const TRASH_ICON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" 
 
 let entries = getHistory();
 let filter = 'all';
+let calcFilter = 'all';
 let query = '';
 
 const listEl = document.getElementById('list');
 const countEl = document.getElementById('count');
 const searchInput = document.getElementById('search-input');
 const filterRow = document.getElementById('filter-row');
+const calcFilterRow = document.getElementById('calc-filter-row');
 const clearAllBtn = document.getElementById('clear-all-btn');
 const decimals = getSettings().decimals ?? 2;
 
@@ -25,9 +27,10 @@ function render(){
 
   const filtered = entries.filter(e => {
     const matchesFilter = filter === 'all' || e.status.group === filter;
+    const matchesCalc = calcFilter === 'all' || (e.calculator || 'imbalance') === calcFilter;
     const haystack = `${e.board || ''} ${e.notes || ''}`.toLowerCase();
     const matchesQuery = !query || haystack.includes(query);
-    return matchesFilter && matchesQuery;
+    return matchesFilter && matchesCalc && matchesQuery;
   });
 
   if(filtered.length === 0){
@@ -114,6 +117,14 @@ filterRow.addEventListener('click', (event) => {
   if(!btn) return;
   filter = btn.dataset.filter;
   [...filterRow.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b === btn));
+  render();
+});
+
+calcFilterRow.addEventListener('click', (event) => {
+  const btn = event.target.closest('button[data-calc]');
+  if(!btn) return;
+  calcFilter = btn.dataset.calc;
+  [...calcFilterRow.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b === btn));
   render();
 });
 
