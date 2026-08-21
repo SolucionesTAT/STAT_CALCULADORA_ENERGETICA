@@ -158,6 +158,18 @@ button{ font-family: inherit; }
 }
 .edit-link:active{ background: var(--surface-sunken); }
 
+/* Tarjeta seleccionable de opción (una por fila) — para formularios donde
+   las opciones tienen texto largo y no caben en un .segctl horizontal
+   (ver SPD: ubicación del equipo). */
+.option-card{
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-card);
+  padding: var(--sp-3) var(--sp-4);
+}
+.option-card.active{ border-color: var(--accent); background: rgba(70,179,167,.12); }
+.option-card .option-title{ font: 600 13.5px var(--font-sans); color: var(--text); }
+.option-card .option-hint{ font: 400 11px var(--font-sans); color: var(--text-tertiary); margin-top: 3px; }
+
 /* ---- Teclado numérico propio ---- */
 .keypad-dock{
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;

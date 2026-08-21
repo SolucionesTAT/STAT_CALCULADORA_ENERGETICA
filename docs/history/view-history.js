@@ -68,6 +68,10 @@ function renderRow(e){
     title = e.board || 'Dimensionamiento de cables';
     meta = `${dateLabel} · ${e.currentA.toFixed(1)} A · ${e.lengthM.toFixed(0)} m`;
     resultValue = e.ok ? `${e.mm2} mm²` : 'N/A';
+  }else if(calculator === 'spd'){
+    title = e.board || `SPD · ${e.spdType}`;
+    meta = `${dateLabel} · ${e.locationLabel}`;
+    resultValue = e.spdType;
   }else{
     const modeLabel = e.mode === 'voltage' ? 'Tensión' : 'Corriente';
     title = e.board || `Desbalance de ${modeLabel.toLowerCase()}`;
@@ -75,17 +79,24 @@ function renderRow(e){
     resultValue = `${e.pct.toFixed(decimals)} %`;
   }
 
+  // SPD no es una evaluación aprobado/no aprobado — no tiene color de estado
+  // real (status.group='info' solo evita que esto se rompa), se pinta con
+  // el acento de marca en vez de var(--state-...), que no existe para 'info'
+  // a propósito (ver logic.js de SPD).
+  const stateColor = calculator === 'spd' ? 'var(--accent)' : `var(--state-${e.status.group})`;
+  const stateLabelText = calculator === 'spd' ? 'RECOMENDACIÓN' : STATE_LABEL[e.status.group];
+
   return `
     <div class="history-item">
       <a class="history-item-link" href="../report/index.html?id=${e.id}">
-        <div class="mini-arc" style="background:var(--state-${e.status.group})"></div>
+        <div class="mini-arc" style="background:${stateColor}"></div>
         <div class="info">
           <div class="title">${escapeHtml(title)}</div>
           <div class="meta">${meta}</div>
         </div>
         <div class="result">
-          <div class="pct tabular" style="color:var(--state-${e.status.group})">${resultValue}</div>
-          <div class="state">${STATE_LABEL[e.status.group]}</div>
+          <div class="pct tabular" style="color:${stateColor}">${resultValue}</div>
+          <div class="state">${stateLabelText}</div>
         </div>
       </a>
       <button type="button" class="history-item-delete" data-id="${e.id}" aria-label="Eliminar medición">${TRASH_ICON}</button>

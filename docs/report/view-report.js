@@ -31,6 +31,8 @@ if(!m){
     shareText = renderSinglePhase(m, decimals, dateLabel);
   }else if(calculator === 'cable-sizing'){
     shareText = renderCableSizing(m, decimals, dateLabel);
+  }else if(calculator === 'spd'){
+    shareText = renderSPD(m, decimals, dateLabel);
   }else{
     shareText = renderImbalance(m, decimals, dateLabel);
   }
@@ -218,6 +220,50 @@ function renderCableSizing(m, decimals, dateLabel){
     </div>`;
 
   return `Reporte STAT — Dimensionamiento de cables\n${m.board ? m.board + '\n' : ''}Calibre: ${sizeText} (${m.status.label})\nCorriente: ${m.currentA.toFixed(decimals)} A · Método: ${methodLabel}\n${dateLabel}`;
+}
+
+function renderSPD(m, decimals, dateLabel){
+  const typeText = m.spdType + (m.spdTypeNote ? ` (${m.spdTypeNote})` : '');
+
+  slot.innerHTML = `
+    <div class="report-sheet">
+      ${reportHead()}
+
+      <div class="report-title">Recomendación de SPD (supresor de transitorios)</div>
+
+      <div class="report-grid">
+        <div><div class="k">TABLERO / EQUIPO</div><div class="v">${m.board || '—'}</div></div>
+        <div><div class="k">FECHA Y HORA</div><div class="v" style="font-family:var(--font-mono)">${dateLabel}</div></div>
+        <div><div class="k">TÉCNICO</div><div class="v">${m.technician || '—'}</div></div>
+        <div><div class="k">REFERENCIA</div><div class="v">IEC 61643-11</div></div>
+      </div>
+
+      <div class="report-grid" style="margin-top:11px">
+        <div><div class="k">UBICACIÓN</div><div class="v">${m.locationLabel}</div></div>
+        <div><div class="k">VOLTAJE NOMINAL</div><div class="v" style="font-family:var(--font-mono)">${m.voltageNominal} V</div></div>
+        <div><div class="k">EXPOSICIÓN A DESCARGAS</div><div class="v">${m.exposureLabel}</div></div>
+        <div><div class="k">MCOV MÍNIMO RECOMENDADO</div><div class="v" style="font-family:var(--font-mono)">${m.mcov.toFixed(0)} V</div></div>
+        <div><div class="k">CORRIENTE DE DESCARGA (Imax)</div><div class="v" style="font-family:var(--font-mono)">${m.imaxRange}</div></div>
+      </div>
+
+      <div class="report-result" style="background:var(--surface-sunken); border:1px solid var(--accent)">
+        <div>
+          <div class="k" style="font:600 9px var(--font-sans); letter-spacing:.09em; color:var(--accent)">TIPO RECOMENDADO</div>
+          <div class="pct" style="font-size:24px">${typeText}</div>
+        </div>
+      </div>
+
+      <div class="report-notes">
+        <div class="k" style="font:600 9px var(--font-sans); letter-spacing:.09em; color:var(--text-tertiary)">VERIFICACIÓN AL INSTALAR</div>
+        <div class="body">Coordinar con la protección aguas arriba (breaker) según la ficha técnica del fabricante, y confirmar que cuente con indicador visual de fin de vida útil.</div>
+      </div>
+
+      ${notesBlock(m)}
+
+      <div class="report-footer">Generado con STAT Calculadora Energética. Recomendación de selección de SPD según IEC 61643-11 (clasificación Tipo 1/2/3). Equipos importados suelen etiquetarse también bajo UL 1449 / NEC Artículo 285, con nomenclatura de Tipo similar. El MCOV y el rango de corriente de descarga son guías prácticas orientativas, no valores normativos exactos, y no reemplazan una evaluación de riesgo formal (IEC 62305-2) para instalaciones críticas.</div>
+    </div>`;
+
+  return `Reporte STAT — Recomendación SPD\n${m.board ? m.board + '\n' : ''}${typeText} · ${m.locationLabel}\nMCOV mínimo recomendado: ${m.mcov.toFixed(0)} V · Imax sugerida: ${m.imaxRange}\n${dateLabel}`;
 }
 
 function renderGrounding(m, decimals, dateLabel){
