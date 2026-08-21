@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Dimensionamiento de Cables · STAT Calculadora Energética</title>
+<meta name="theme-color" content="#0F1413">
+<link rel="manifest" href="../../manifest.json">
+<link rel="icon" href="../../assets/icons/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../css/base.css">
+<script>
+  try{
+    var s = JSON.parse(localStorage.getItem('stat-calc:settings') || '{}');
+    if(s.theme && s.theme !== 'auto') document.documentElement.setAttribute('data-theme', s.theme);
+  }catch(e){}
+</script>
+</head>
+<body data-base="../..">
+<div class="app no-bottom-nav">
+  <div class="subheader">
+    <a class="back-btn" href="../../index.html" aria-label="Volver">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </a>
+    <div class="title">Dimensionamiento de Cables</div>
+  </div>
+
+  <div class="screen" style="padding-top:6px">
+    <div class="label" style="margin-bottom:10px">Ampacidad</div>
+
+    <div class="field-block">
+      <div class="label">Corriente de diseño</div>
+      <div class="numfield">
+        <input type="text" inputmode="decimal" class="numfield-input" id="current-input" placeholder="0.0">
+        <span class="unit">A</span>
+      </div>
+    </div>
+
+    <div class="label" style="margin-bottom:10px">Método de instalación</div>
+    <div class="segctl" id="method-switch" style="margin-bottom:16px">
+      <button type="button" class="active" data-method="ducto">Ducto/canalización</button>
+      <button type="button" data-method="aireLibre">Aire libre</button>
+    </div>
+
+    <div class="field-block">
+      <div class="label">Temperatura ambiente</div>
+      <div class="numfield">
+        <input type="text" inputmode="decimal" class="numfield-input" id="ambient-input" value="30">
+        <span class="unit">°C</span>
+      </div>
+    </div>
+
+    <div class="field-block">
+      <div class="label">Conductores agrupados en el mismo ducto</div>
+      <div class="numfield">
+        <input type="text" inputmode="numeric" class="numfield-input" id="group-input" value="1">
+        <span class="unit">#</span>
+      </div>
+      <div class="field-hint">Circuitos que comparten el mismo ducto o bandeja, sin contar este.</div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px; margin:22px 0 14px">
+      <div class="label">Caída de tensión</div>
+      <div style="flex:1; height:1px; background:var(--border)"></div>
+    </div>
+
+    <div class="field-block">
+      <div class="label">Longitud del tramo</div>
+      <div class="numfield">
+        <input type="text" inputmode="decimal" class="numfield-input" id="length-input" placeholder="0.0">
+        <span class="unit">m</span>
+      </div>
+    </div>
+
+    <div class="field-block">
+      <div class="label">Voltaje del sistema</div>
+      <div class="numfield">
+        <input type="text" inputmode="decimal" class="numfield-input" id="voltage-input" placeholder="0.0">
+        <span class="unit">V</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:4px; padding:11px 13px">
+      <div style="font:500 11px var(--font-sans); color:var(--text-tertiary); line-height:1.5">
+        Conductor: <strong style="color:var(--text)">cobre</strong> · Circuito: <strong style="color:var(--text)">monofásico</strong> (2 hilos). Aluminio y trifásico llegarán en una próxima versión.
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="calc-btn" style="margin-top:20px" disabled>Calcular calibre</button>
+  </div>
+</div>
+
+<script type="module" src="view-capture.js"></script>
+</body>
+</html>

@@ -29,6 +29,8 @@ if(!m){
     shareText = renderGrounding(m, decimals, dateLabel);
   }else if(calculator === 'single-phase-imbalance'){
     shareText = renderSinglePhase(m, decimals, dateLabel);
+  }else if(calculator === 'cable-sizing'){
+    shareText = renderCableSizing(m, decimals, dateLabel);
   }else{
     shareText = renderImbalance(m, decimals, dateLabel);
   }
@@ -159,6 +161,63 @@ function renderSinglePhase(m, decimals, dateLabel){
     </div>`;
 
   return `Reporte STAT — Desbalance monofásico de ${modeLabel}\n${m.board ? m.board + '\n' : ''}Desbalance: ${m.pct.toFixed(decimals)}% (${m.status.label})\nPromedio: ${m.avg.toFixed(decimals)} ${m.unit}\n${dateLabel}`;
+}
+
+function renderCableSizing(m, decimals, dateLabel){
+  const methodLabel = m.method === 'ducto' ? 'Ducto/canalización' : 'Aire libre';
+  const sizeText = m.ok ? `${m.mm2} mm² (≈ ${m.awg})` : 'Sin calibre válido';
+  const determinantText = !m.ok
+    ? (m.reason === 'ampacidad' ? 'Ningún calibre de la tabla soporta esta corriente con las condiciones dadas' : 'La caída de tensión supera el umbral incluso en el calibre más grande de la tabla')
+    : (m.determinant === 'ampacidad' ? 'Determinado por ampacidad' : `Determinado por caída de tensión (ampacidad ya cumplía en ${m.ampacitySize} mm²)`);
+
+  const criteriaRows = m.ok ? `
+      <div><div class="k">AMPACIDAD CORREGIDA (Iz)</div><div class="v" style="font-family:var(--font-mono)">${m.izCorrected.toFixed(decimals)} A ≥ ${m.currentA.toFixed(decimals)} A</div></div>
+      <div><div class="k">CAÍDA DE TENSIÓN</div><div class="v" style="font-family:var(--font-mono)">${m.pctDrop.toFixed(decimals)} %</div></div>` : '';
+
+  slot.innerHTML = `
+    <div class="report-sheet">
+      ${reportHead()}
+
+      <div class="report-title">Dimensionamiento de cables — monofásico, cobre</div>
+
+      <div class="report-grid">
+        <div><div class="k">TABLERO / EQUIPO</div><div class="v">${m.board || '—'}</div></div>
+        <div><div class="k">FECHA Y HORA</div><div class="v" style="font-family:var(--font-mono)">${dateLabel}</div></div>
+        <div><div class="k">TÉCNICO</div><div class="v">${m.technician || '—'}</div></div>
+        <div><div class="k">REFERENCIA</div><div class="v">IEC 60364-5-52 (ampacidad) · umbral práctico de caída ≤3%</div></div>
+      </div>
+
+      <div class="report-grid" style="margin-top:11px">
+        <div><div class="k">CORRIENTE DE DISEÑO</div><div class="v" style="font-family:var(--font-mono)">${m.currentA.toFixed(decimals)} A</div></div>
+        <div><div class="k">MÉTODO</div><div class="v">${methodLabel}</div></div>
+        <div><div class="k">TEMPERATURA AMBIENTE</div><div class="v" style="font-family:var(--font-mono)">${m.ambientC.toFixed(1)} °C</div></div>
+        <div><div class="k">CONDUCTORES AGRUPADOS</div><div class="v" style="font-family:var(--font-mono)">${m.groupCount}</div></div>
+        <div><div class="k">LONGITUD DEL TRAMO</div><div class="v" style="font-family:var(--font-mono)">${m.lengthM.toFixed(decimals)} m</div></div>
+        <div><div class="k">VOLTAJE DEL SISTEMA</div><div class="v" style="font-family:var(--font-mono)">${m.voltageV.toFixed(decimals)} V</div></div>
+        ${criteriaRows}
+      </div>
+
+      <div class="report-result" style="background:var(--state-${m.status.group}-bg); border:1px solid var(--state-${m.status.group}-border)">
+        <div>
+          <div class="k" style="font:600 9px var(--font-sans); letter-spacing:.09em; color:var(--state-${m.status.group})">CALIBRE MÍNIMO</div>
+          <div class="pct" style="font-size:24px">${sizeText}</div>
+        </div>
+        <div class="side">
+          <span class="badge badge-pill" style="background:var(--state-${m.status.group}); color:#fff"><span>${m.status.label}</span></span>
+        </div>
+      </div>
+
+      <div class="report-notes">
+        <div class="k" style="font:600 9px var(--font-sans); letter-spacing:.09em; color:var(--text-tertiary)">CRITERIO DETERMINANTE</div>
+        <div class="body">${determinantText}</div>
+      </div>
+
+      ${notesBlock(m)}
+
+      <div class="report-footer">Generado con STAT Calculadora Energética. Calibre mínimo que cumple ampacidad (IEC 60364-5-52, tabla B.52.2, cobre, 2 conductores, PVC 70°C) y caída de tensión (umbral práctico ≤3%, no impuesto por IEC 60364-5-52). v1: solo cobre, solo circuitos monofásicos.</div>
+    </div>`;
+
+  return `Reporte STAT — Dimensionamiento de cables\n${m.board ? m.board + '\n' : ''}Calibre: ${sizeText} (${m.status.label})\nCorriente: ${m.currentA.toFixed(decimals)} A · Método: ${methodLabel}\n${dateLabel}`;
 }
 
 function renderGrounding(m, decimals, dateLabel){

@@ -1,10 +1,17 @@
 import { ROD_DIAMETERS, IEC_SENSITIVITIES, calculate } from './logic.js';
-import { setCurrentMeasurement } from '../../js/storage.js';
+import { setCurrentMeasurement, getCurrentMeasurement } from '../../js/storage.js';
 
-let soilKnown = true;
-let diameterId = '5/8';
-let useIEC = false;
-let iDeltaMa = null;
+// Solo se precarga si se llegó con ?edit=1 (botón del lápiz en Resultado) —
+// la flecha de regresar o el atrás del navegador deben dejar los campos
+// vacíos, igual que el resto de las calculadoras.
+const isEdit = new URLSearchParams(window.location.search).get('edit') === '1';
+const previousRaw = getCurrentMeasurement();
+const previous = isEdit && previousRaw && previousRaw.calculator === 'grounding' ? previousRaw : null;
+
+let soilKnown = previous ? previous.soilKnown : true;
+let diameterId = previous ? previous.diameterId : '5/8';
+let useIEC = previous ? previous.useIEC : false;
+let iDeltaMa = previous ? previous.iDeltaMa : null;
 
 const soilSwitch = document.getElementById('soil-switch');
 const resistivityBlock = document.getElementById('resistivity-block');
@@ -21,6 +28,34 @@ const iecChevron = document.getElementById('iec-chevron');
 const iecPanel = document.getElementById('iec-panel');
 const ideltaSwitch = document.getElementById('idelta-switch');
 const calcBtn = document.getElementById('calc-btn');
+
+if(previous){
+  [...soilSwitch.querySelectorAll('button')].forEach(b => b.classList.toggle('active', (b.dataset.known === 'yes') === soilKnown));
+  resistivityBlock.style.display = soilKnown ? 'block' : 'none';
+  wennerBlock.style.display = soilKnown ? 'none' : 'block';
+  if(soilKnown){
+    resistivityInput.value = String(previous.resistivity);
+  }else{
+    wennerAInput.value = String(previous.wennerA);
+    wennerRInput.value = String(previous.wennerR);
+  }
+
+  lengthInput.value = String(previous.length);
+
+  [...diameterSwitch.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b.dataset.diameter === diameterId));
+  diameterOtherBlock.style.display = diameterId === 'other' ? 'block' : 'none';
+  if(diameterId === 'other' && previous.diameterOtherValue != null){
+    diameterInput.value = previous.diameterOtherValue;
+  }
+
+  if(useIEC){
+    iecPanel.style.display = 'block';
+    iecChevron.style.transform = 'rotate(90deg)';
+  }
+  if(iDeltaMa != null){
+    [...ideltaSwitch.querySelectorAll('button')].forEach(b => b.classList.toggle('active', Number(b.dataset.ma) === iDeltaMa));
+  }
+}
 
 soilSwitch.addEventListener('click', (event) => {
   const btn = event.target.closest('button[data-known]');
@@ -123,6 +158,8 @@ calcBtn.addEventListener('click', () => {
     wennerR: input.wennerR,
     resistivity: result.resistivity,
     length: input.length,
+    diameterId,
+    diameterOtherValue: diameterId === 'other' ? diameterInput.value : null,
     diameterLabel,
     resistance: result.resistance,
     useIEC,

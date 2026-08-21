@@ -64,6 +64,10 @@ function renderRow(e){
     title = e.board || `Desbalance monofásico de ${modeLabel.toLowerCase()}`;
     meta = `${dateLabel} · ${e.avg.toFixed(decimals)} ${e.unit} prom.`;
     resultValue = `${e.pct.toFixed(decimals)} %`;
+  }else if(calculator === 'cable-sizing'){
+    title = e.board || 'Dimensionamiento de cables';
+    meta = `${dateLabel} · ${e.currentA.toFixed(1)} A · ${e.lengthM.toFixed(0)} m`;
+    resultValue = e.ok ? `${e.mm2} mm²` : 'N/A';
   }else{
     const modeLabel = e.mode === 'voltage' ? 'Tensión' : 'Corriente';
     title = e.board || `Desbalance de ${modeLabel.toLowerCase()}`;

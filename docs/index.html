@@ -73,6 +73,16 @@
       </div>
       <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
     </a>
+    <a class="calc-item" href="calculators/cable-sizing/index.html" style="text-decoration:none">
+      <div class="icon">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h4l2-5 4 10 2-5h4"/></svg>
+      </div>
+      <div style="flex:1">
+        <div class="title">Dimensionamiento de Cables</div>
+        <div class="subtitle">Ducto/aire libre · IEC 60364-5-52</div>
+      </div>
+      <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+    </a>
 
     <div style="display:flex; align-items:center; gap:10px; margin:20px 0 10px">
       <div class="label">Próximos módulos</div>
@@ -81,7 +91,6 @@
     <div class="coming-soon-grid">
       <div class="coming-soon-card"><div class="title">Factor de potencia</div><div class="tag">PRONTO</div></div>
       <div class="coming-soon-card"><div class="title">Caída de tensión</div><div class="tag">PRONTO</div></div>
-      <div class="coming-soon-card"><div class="title">Dimensionamiento de cables</div><div class="tag">PRONTO</div></div>
       <div class="coming-soon-card"><div class="title">Corriente de cortocircuito</div><div class="tag">PRONTO</div></div>
     </div>
     <div style="font:500 11px var(--font-sans); color:var(--text-tertiary); margin-top:10px">+ Carga de transformador · Termografía</div>
@@ -136,6 +145,19 @@
             <div class="info" style="flex:1">
               <div class="label">Última medición${last.board ? ' · ' + last.board : ''} · Puesta a tierra</div>
               <div class="value tabular" style="color:var(--state-${last.status.group})">${last.resistance.toFixed(decimals)}<span class="pct"> Ω</span></div>
+              <div class="meta">${dateLabel} · ${last.status.label}</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </a>`;
+    }else if(calculator === 'cable-sizing'){
+      const valueText = last.ok ? `${last.mm2}<span class="pct"> mm²</span>` : 'N/A';
+      slot.innerHTML = `
+        <a class="summary-card" href="report/index.html?id=${last.id}" style="text-decoration:none; display:block">
+          <div class="row">
+            <div class="info" style="flex:1">
+              <div class="label">Última medición${last.board ? ' · ' + last.board : ''} · Dimensionamiento de cables</div>
+              <div class="value tabular" style="color:var(--state-${last.status.group})">${valueText}</div>
               <div class="meta">${dateLabel} · ${last.status.label}</div>
             </div>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>

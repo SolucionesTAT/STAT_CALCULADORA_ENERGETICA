@@ -22,7 +22,7 @@ chipsRow.innerHTML = m.tags.map((tag, i) => `
     <div class="tabular" style="font:600 15px var(--font-mono); color:var(--text); margin-top:3px">${m.values[i].toFixed(decimals)}</div>
   </div>
 `).join('') + `
-  <a href="index.html" style="width:40px; border:1px dashed var(--border); border-radius:var(--r-cell); display:flex; align-items:center; justify-content:center; flex:none; color:var(--accent)" aria-label="Editar valores">
+  <a href="index.html?edit=1" style="width:40px; border:1px dashed var(--border); border-radius:var(--r-cell); display:flex; align-items:center; justify-content:center; flex:none; color:var(--accent)" aria-label="Editar valores">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4l5 5-9 9H6v-5z"/></svg>
   </a>`;
 

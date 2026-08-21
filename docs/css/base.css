@@ -145,6 +145,19 @@ button{ font-family: inherit; }
   border-radius: var(--r-pill); padding: 3px 8px; flex: none;
 }
 
+/* Enlace "Editar valores" en pantallas de Resultado que vuelven a Captura
+   con los datos ya guardados (?edit=1) — ícono + texto a propósito, no solo
+   ícono, para que la intención sea clara sin depender de que alguien
+   reconozca el símbolo del lápiz. */
+.edit-link{
+  display: inline-flex; align-items: center; gap: 6px; flex: none;
+  height: 32px; padding: 0 var(--sp-3);
+  border: 1px solid var(--border); border-radius: var(--r-pill);
+  background: var(--surface); color: var(--accent);
+  font: 600 11.5px var(--font-sans); text-decoration: none;
+}
+.edit-link:active{ background: var(--surface-sunken); }
+
 /* ---- Teclado numérico propio ---- */
 .keypad-dock{
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;

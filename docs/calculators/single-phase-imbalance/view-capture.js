@@ -3,8 +3,12 @@ import { setCurrentMeasurement, getCurrentMeasurement } from '../../js/storage.j
 
 // La "medición actual" es una casilla compartida entre calculadoras — antes
 // de prellenar campos hay que confirmar que de verdad es de este módulo.
+// Solo se precarga si se llegó con ?edit=1 (botón del lápiz en Resultado) —
+// la flecha de regresar o el atrás del navegador deben dejar los campos
+// vacíos.
+const isEdit = new URLSearchParams(window.location.search).get('edit') === '1';
 const previousRaw = getCurrentMeasurement();
-const previous = previousRaw && previousRaw.calculator === 'single-phase-imbalance' ? previousRaw : null;
+const previous = isEdit && previousRaw && previousRaw.calculator === 'single-phase-imbalance' ? previousRaw : null;
 let mode = previous ? previous.mode : 'voltage';
 let activeIndex = 0;
 

@@ -5,8 +5,12 @@ import { setCurrentMeasurement, getCurrentMeasurement } from '../../js/storage.j
 // pasar datos entre captura/resultado/reporte). Antes de usarla para
 // precargar campos, hay que confirmar que de verdad es de este módulo —
 // si viene de otra calculadora (p. ej. Puesta a Tierra), no tiene .mode/.values.
+// Solo se precarga si se llegó con ?edit=1 (botón del lápiz en Resultado) —
+// llegar con la flecha de regresar o el atrás del navegador debe dejar los
+// campos vacíos, no repetir la última medición sin que el técnico lo pida.
+const isEdit = new URLSearchParams(window.location.search).get('edit') === '1';
 const previousRaw = getCurrentMeasurement();
-const previous = previousRaw && previousRaw.calculator === 'imbalance' ? previousRaw : null;
+const previous = isEdit && previousRaw && previousRaw.calculator === 'imbalance' ? previousRaw : null;
 let mode = previous ? previous.mode : 'voltage';
 let activeIndex = 0;
 const buffers = previous ? previous.values.map(v => String(v)) : ['', '', ''];

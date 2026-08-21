@@ -2,7 +2,7 @@
 // Cachea todos los assets propios para funcionamiento 100% offline.
 // Sube este número cada vez que cambien los archivos listados abajo, para
 // forzar la actualización del cache en los dispositivos ya instalados.
-const CACHE_VERSION = 'stat-calc-v11';
+const CACHE_VERSION = 'stat-calc-v14';
 
 const PRECACHE_URLS = [
   './',
@@ -28,6 +28,11 @@ const PRECACHE_URLS = [
   'calculators/grounding/logic.js',
   'calculators/grounding/view-capture.js',
   'calculators/grounding/view-result.js',
+  'calculators/cable-sizing/index.html',
+  'calculators/cable-sizing/result.html',
+  'calculators/cable-sizing/logic.js',
+  'calculators/cable-sizing/view-capture.js',
+  'calculators/cable-sizing/view-result.js',
   'report/index.html',
   'report/view-report.js',
   'history/index.html',
