@@ -2,7 +2,7 @@
 // Cachea todos los assets propios para funcionamiento 100% offline.
 // Sube este número cada vez que cambien los archivos listados abajo, para
 // forzar la actualización del cache en los dispositivos ya instalados.
-const CACHE_VERSION = 'stat-calc-v22';
+const CACHE_VERSION = 'stat-calc-v24';
 
 const PRECACHE_URLS = [
   './',

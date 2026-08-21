@@ -168,9 +168,16 @@ function renderSinglePhase(m, decimals, dateLabel){
 function renderCableSizing(m, decimals, dateLabel){
   const methodLabel = m.method === 'ducto' ? 'Ducto/canalización' : 'Aire libre';
   const sizeText = m.ok ? `${m.mm2} mm² (≈ ${m.awg})` : 'Sin calibre válido';
-  const determinantText = !m.ok
-    ? (m.reason === 'ampacidad' ? 'Ningún calibre de la tabla soporta esta corriente con las condiciones dadas' : 'La caída de tensión supera el umbral incluso en el calibre más grande de la tabla')
-    : (m.determinant === 'ampacidad' ? 'Determinado por ampacidad' : `Determinado por caída de tensión (ampacidad ya cumplía en ${m.ampacitySize} mm²)`);
+  let determinantText;
+  if(!m.ok && m.reason === 'ambiente'){
+    determinantText = `La temperatura ambiente ingresada (${m.ambientC.toFixed(1)} °C) ya alcanza o supera los 70 °C, el límite térmico del aislamiento PVC — ningún calibre es válido en este ambiente`;
+  }else if(!m.ok && m.reason === 'ampacidad'){
+    determinantText = 'Ningún calibre de la tabla soporta esta corriente con las condiciones dadas';
+  }else if(!m.ok){
+    determinantText = 'La caída de tensión supera el umbral incluso en el calibre más grande de la tabla';
+  }else{
+    determinantText = m.determinant === 'ampacidad' ? 'Determinado por ampacidad' : `Determinado por caída de tensión (ampacidad ya cumplía en ${m.ampacitySize} mm²)`;
+  }
 
   const criteriaRows = m.ok ? `
       <div><div class="k">AMPACIDAD CORREGIDA (Iz)</div><div class="v" style="font-family:var(--font-mono)">${m.izCorrected.toFixed(decimals)} A ≥ ${m.currentA.toFixed(decimals)} A</div></div>

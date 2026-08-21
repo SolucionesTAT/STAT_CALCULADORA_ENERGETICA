@@ -31,9 +31,16 @@ if(m.ok){
     <div><div class="k">REFERENCIA</div><div class="v">Umbral práctico de diseño, no límite de IEC 60364-5-52</div></div>`;
 }else{
   document.getElementById('size-readout').textContent = 'N/A';
-  document.getElementById('determinant-text').textContent = m.reason === 'ampacidad'
-    ? 'Ningún calibre de la tabla (hasta 240 mm²) soporta esta corriente con las condiciones ingresadas. Revisa temperatura ambiente, agrupamiento, o considera dividir el circuito.'
-    : `La caída de tensión supera ${VOLTAGE_DROP_LIMIT_PCT}% incluso en el calibre más grande de la tabla (240 mm², que sí cumple ampacidad desde ${m.ampacitySize} mm²). Considera acortar el tramo o subir el voltaje del sistema.`;
+
+  let reasonText;
+  if(m.reason === 'ambiente'){
+    reasonText = `La temperatura ambiente ingresada (${m.ambientC.toFixed(1)} °C) ya alcanza o supera los 70 °C, el límite térmico del aislamiento PVC — ningún calibre es válido en este ambiente, sin importar la corriente. Verifica que el dato sea correcto; si lo es, se necesitaría un aislamiento con mayor rango térmico (fuera del alcance de este módulo).`;
+  }else if(m.reason === 'ampacidad'){
+    reasonText = 'Ningún calibre de la tabla (hasta 240 mm²) soporta esta corriente con las condiciones ingresadas. Revisa el agrupamiento, o considera dividir el circuito.';
+  }else{
+    reasonText = `La caída de tensión supera ${VOLTAGE_DROP_LIMIT_PCT}% incluso en el calibre más grande de la tabla (240 mm², que sí cumple ampacidad desde ${m.ampacitySize} mm²). Considera acortar el tramo o subir el voltaje del sistema.`;
+  }
+  document.getElementById('determinant-text').textContent = reasonText;
 
   document.getElementById('criteria-grid').innerHTML = `
     <div><div class="k">FACTORES APLICADOS</div><div class="v" style="font-family:var(--font-mono)">Ca=${m.ca.toFixed(2)} · Cg=${m.cg.toFixed(2)}</div></div>`;

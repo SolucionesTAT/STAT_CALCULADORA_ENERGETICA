@@ -88,6 +88,19 @@ export function calculate(input){
   const ca = ambientCorrectionFactor(ambientC);
   const cg = groupingFactor(groupCount);
 
+  // Ambiente en o sobre el límite térmico del PVC (70°C): ningún calibre es
+  // válido pase lo que pase con la corriente — es una causa distinta a "la
+  // corriente es demasiado alta para la tabla", así que se distingue con su
+  // propio motivo para que el mensaje en la UI apunte al dato correcto.
+  if(ca === 0){
+    return {
+      ok: false,
+      reason: 'ambiente',
+      ca, cg,
+      status: { group: 'crit', label: 'SIN CALIBRE VÁLIDO' }
+    };
+  }
+
   const rows = AMPACITY_TABLE.map(row => ({
     mm2: row.mm2,
     izCorrected: row[method] * ca * cg,

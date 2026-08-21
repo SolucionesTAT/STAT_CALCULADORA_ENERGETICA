@@ -1,6 +1,7 @@
 {
   "name": "stat-calculadora-energetica",
   "private": true,
+  "type": "module",
   "description": "Pruebas de la lógica de cálculo (docs/calculators/*/logic.js) de la PWA STAT Calculadora Energética. La app en sí no tiene build ni dependencias — esto es solo para node --test.",
   "scripts": {
     "test": "node --test"

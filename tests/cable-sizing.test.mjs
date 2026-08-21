@@ -56,8 +56,15 @@ test('sin calibre válido: la caída de tensión nunca baja de 3% (tramo extremo
   assert.equal(r.reason, 'caida');
 });
 
-test('ambiente en el límite térmico del PVC (70°C): ningún calibre es válido', () => {
+test('ambiente en el límite térmico del PVC (70°C): motivo distinto a "ampacidad"', () => {
   const r = calculate({ currentA: 25, method: 'ducto', ambientC: 75, groupCount: 1, lengthM: 2, voltageV: 120 });
   assert.equal(r.ca, 0);
   assert.equal(r.ok, false);
+  assert.equal(r.reason, 'ambiente'); // no "ampacidad" — la causa es el ambiente, no la corriente
+});
+
+test('ambiente normal con corriente alta: sigue siendo "ampacidad", no "ambiente"', () => {
+  const r = calculate({ currentA: 500, method: 'ducto', ambientC: 30, groupCount: 1, lengthM: 10, voltageV: 220 });
+  assert.notEqual(r.ca, 0);
+  assert.equal(r.reason, 'ampacidad');
 });
